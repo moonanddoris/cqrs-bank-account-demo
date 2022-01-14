@@ -1,8 +1,11 @@
 package com.bridgingcode.bankaccountscqrsdemo.query.controller;
 
+import com.bridgingcode.bankaccountscqrsdemo.command.service.Replayer;
 import com.bridgingcode.bankaccountscqrsdemo.query.entity.Account;
 import com.bridgingcode.bankaccountscqrsdemo.query.query.FindAccountByIdQuery;
+import com.bridgingcode.bankaccountscqrsdemo.query.service.ManageAccountService;
 import org.axonframework.queryhandling.QueryGateway;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ManageAccountController {
 
     private final QueryGateway queryGateway;
+
+    @Autowired
+    ManageAccountService manageAccountService;
+
+    @Autowired
+    Replayer replayer;
 
     public ManageAccountController(QueryGateway queryGateway) {
         this.queryGateway = queryGateway;
@@ -35,4 +44,17 @@ public class ManageAccountController {
 
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
+
+    @GetMapping("/listEvents")
+    public ResponseEntity<String> test() {
+        manageAccountService.listEventsTest();
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
+    @GetMapping("/replay")
+    public ResponseEntity<String> replay() {
+        replayer.replay();
+        return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
 }
